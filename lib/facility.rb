@@ -73,6 +73,12 @@ class Facility
   def renew_drivers_license(registrant)
     if self.services.include?('Renew License')
 
+      if registrant.license_data[:license] == true
+
+      else
+        'This registrant is not eligible for license renewal.'
+      end
+
     else
       "This facility does not currently renew licenses."
     end
