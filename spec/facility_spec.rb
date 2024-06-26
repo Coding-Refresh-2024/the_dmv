@@ -7,6 +7,7 @@ RSpec.describe Facility do
     @bolt = Vehicle.new({vin: '987654321abcdefgh', year: 2019, make: 'Chevrolet', model: 'Bolt', engine: :ev} )
     @camaro = Vehicle.new({vin: '1a2b3c4d5e6f', year: 1969, make: 'Chevrolet', model: 'Camaro', engine: :ice} )
     @registrant1 = Registrant.new('Cory', 33, true)
+    @registrant2 = Registrant.new('Abby', 15)
   end
   describe '#initialize' do
     it 'can initialize' do
@@ -91,6 +92,14 @@ RSpec.describe Facility do
       @facility.add_service('Written Test')
 
       expect(@facility.administer_written_test(@registrant1)).to_not eq("This facility does not current administer written tests.")
+    end
+
+    it "verifies that the applicant has a permit and is of age(over 15) to take the written test" do
+      @facility.add_service('Written Test')
+
+      expect(@facility.administer_written_test(@registrant1)).to_not eq('This registrant is not eligible to take the written test.')
+      expect(@facility.administer_written_test(@registrant2)).to eq('This registrant is not eligible to take the written test.')
+
     end
   end
 end
