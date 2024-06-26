@@ -170,5 +170,19 @@ RSpec.describe Facility do
 
       expect(@facility.renew_drivers_license(@registrant1)).to_not eq('This registrant is not eligible for license renewal.')
     end
+
+    it "updates the registrants license_data[:renewed] to true" do
+      @facility.add_service('Renew License')
+      @facility.add_service('Written Test')
+      @facility.add_service('Road Test')
+      @facility.administer_written_test(@registrant1)
+      @facility.administer_road_test(@registrant1)
+
+      expect(@registrant1.license_data[:renewed]).to eq(false)
+
+      @facility.renew_drivers_license(@registrant1)
+
+      expect(@registrant1.license_data[:renewed]).to eq(true)
+    end
   end
 end
