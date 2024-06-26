@@ -113,7 +113,7 @@ RSpec.describe Facility do
     end
   end
 
-  describe '#adminster_road_test'do
+  describe '#administer_road_test'do
     it "verifies that the facility can administer the road test" do
       @facility.add_service('Written Test')
       @facility.administer_written_test(@registrant1)
@@ -123,6 +123,17 @@ RSpec.describe Facility do
       @facility.add_service('Road Test')
 
       expect(@facility.administer_road_test(@registrant1)).to_not eq('This facility does not currently administer road tests.')
+    end
+
+    it "verifies that the registrant is eligible to take the road test" do
+      @facility.add_service('Written Test')
+      @facility.add_service('Road Test')
+
+      expect(@facility.administer_road_test(@registrant1)).to eq('This registrant is not eligible to take the road test.')
+
+      @facility.administer_written_test(@registrant1)
+
+      expect(@facility.administer_road_test(@registrant1)).to_not eq('This registrant is not eligible to take the road test.')
     end
   end
 end
