@@ -46,6 +46,12 @@ class Facility
   def administer_written_test(registrant)
     if self.services.include?('Written Test')
 
+      if registrant.age >=16 && registrant.permit? == true
+
+      else
+        'This registrant is not eligible to take the written test.'
+      end
+
     else
       "This facility does not current administer written tests."
     end
