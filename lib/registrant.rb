@@ -1,7 +1,9 @@
 class Registrant
 
-  attr_reader :name, :age, :permit, :license_data
+  attr_reader :name, :age, :permit
   alias_method :permit?, :permit
+
+  attr_accessor :license_data
 
   def initialize(name, age, permit = false)
     @name = name

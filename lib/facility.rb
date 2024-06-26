@@ -47,7 +47,7 @@ class Facility
     if self.services.include?('Written Test')
 
       if registrant.age >=16 && registrant.permit? == true
-
+        registrant.license_data[:written] = true
       else
         'This registrant is not eligible to take the written test.'
       end
