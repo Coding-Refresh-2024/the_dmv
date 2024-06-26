@@ -16,4 +16,12 @@ RSpec.describe Registrant do
     expect(@registrant2.license_data).to eq({:written=>false, :license=>false, :renewed=>false})
   end
 
+  describe '#earn_permit' do
+    it "updates the :permit? attribute to true" do
+      expect(@registrant2.permit?).to eq(false)
+      @registrant2.earn_permit
+      expect(@registrant2.permit?).to eq(true)
+    end
+  end
+
 end
