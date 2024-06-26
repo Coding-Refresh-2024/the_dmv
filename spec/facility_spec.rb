@@ -101,5 +101,15 @@ RSpec.describe Facility do
       expect(@facility.administer_written_test(@registrant2)).to eq('This registrant is not eligible to take the written test.')
 
     end
+
+    it "updates the registrants license_data[:written] to true" do
+      @facility.add_service('Written Test')
+
+      expect(@registrant1.license_data[:written]).to eq(false)
+
+      @facility.administer_written_test(@registrant1)
+
+      expect(@registrant1.license_data[:written]).to eq(true)
+    end
   end
 end
