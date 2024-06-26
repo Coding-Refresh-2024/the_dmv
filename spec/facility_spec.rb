@@ -112,4 +112,13 @@ RSpec.describe Facility do
       expect(@registrant1.license_data[:written]).to eq(true)
     end
   end
+
+  describe '#adminster_road_test'do
+    it "verifies that the facility can administer the road test" do
+      @facility.add_service('Written Test')
+      @facility.administer_written_test(@registrant1)
+
+      expect(@facility.administer_road_test(@registrant1)).to eq('This facility does not currently administer road tests.')
+    end
+  end
 end
