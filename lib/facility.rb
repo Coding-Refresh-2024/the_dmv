@@ -55,6 +55,14 @@ class Facility
     else
       "This facility does not current administer written tests."
     end
-
   end
+
+  def administer_road_test(registrant)
+    if self.services.include?('Road Test')
+
+    else
+      'This facility does not currently administer road tests.'
+    end
+  end
+
 end
