@@ -119,6 +119,10 @@ RSpec.describe Facility do
       @facility.administer_written_test(@registrant1)
 
       expect(@facility.administer_road_test(@registrant1)).to eq('This facility does not currently administer road tests.')
+
+      @facility.add_service('Road Test')
+
+      expect(@facility.administer_road_test(@registrant1)).to_not eq('This facility does not currently administer road tests.')
     end
   end
 end
