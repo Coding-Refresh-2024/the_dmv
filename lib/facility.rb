@@ -3,8 +3,9 @@ class Facility
               :address,
               :phone,
               :services,
-              :registered_vehicles,
-              :collected_fees
+              :registered_vehicles
+
+  attr_accessor :collected_fees
 
   def initialize(hash)
     @name = hash[:name]
@@ -26,10 +27,13 @@ class Facility
 
     if vehicle.antique?
       vehicle.plate_type = :antique
+      self.collected_fees += 25
     elsif vehicle.electric_vehicle?
       vehicle.plate_type = :ev
+      self.collected_fees += 200
     else
       vehicle.plate_type = :regular
+      self.collected_fees += 100
     end
   end
 end
