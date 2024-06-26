@@ -148,4 +148,14 @@ RSpec.describe Facility do
       expect(@registrant1.license_data[:license]).to eq(true)
     end
   end
+
+  describe '#renew_drivers_license' do
+    it "verifies the facility offers this service or not" do
+      expect(@facility.renew_drivers_license(@registrant1)).to eq("This facility does not currently renew licenses.")
+
+      @facility.add_service('Renew License')
+
+      expect(@facility.renew_drivers_license(@registrant1)).to_not eq("This facility does not currently renew licenses.")
+    end
+  end
 end
