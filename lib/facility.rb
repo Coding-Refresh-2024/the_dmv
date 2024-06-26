@@ -70,4 +70,12 @@ class Facility
     end
   end
 
+  def renew_drivers_license(registrant)
+    if self.services.include?('Renew License')
+
+    else
+      "This facility does not currently renew licenses."
+    end
+  end
+
 end
