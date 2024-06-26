@@ -74,7 +74,7 @@ class Facility
     if self.services.include?('Renew License')
 
       if registrant.license_data[:license] == true
-
+        registrant.license_data[:renewed] = true
       else
         'This registrant is not eligible for license renewal.'
       end
