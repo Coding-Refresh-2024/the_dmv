@@ -60,6 +60,11 @@ class Facility
   def administer_road_test(registrant)
     if self.services.include?('Road Test')
 
+      if registrant.license_data[:written] == true
+
+      else
+        'This registrant is not eligible to take the road test.'
+      end
     else
       'This facility does not currently administer road tests.'
     end
