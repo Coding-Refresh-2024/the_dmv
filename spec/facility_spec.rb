@@ -30,19 +30,32 @@ RSpec.describe Facility do
   end
 
   describe '#register vehicle' do
+    it "verifies that the facility can register vehicles or not" do
+      expect(@facility.registered_vehicles).to eq([])
+      expect(@facility.register_vehicle(@cruz)).to eq("This facility is not able to register vehicles at this time.")
+
+      @facility.add_service('Vehicle Registration')
+      @facility.register_vehicle(@cruz)
+
+      expect(@facility.registered_vehicles).to eq([@cruz])
+    end
+
     it "can add a vehicle to a facilities registered vehicle attribute" do
+      @facility.add_service('Vehicle Registration')
       expect(@facility.registered_vehicles).to eq([])
       @facility.register_vehicle(@cruz)
       expect(@facility.registered_vehicles).to eq([@cruz])
     end
 
     it "updates the vehicles registration date attribute" do
+      @facility.add_service('Vehicle Registration')
       expect(@cruz.registration_date).to eq(nil)
       @facility.register_vehicle(@cruz)
       expect(@cruz.registration_date).to eq(Date.today)
     end
 
     it "updates the vehicles plate type to one of three types" do
+      @facility.add_service('Vehicle Registration')
       expect(@cruz.plate_type).to eq(nil)
       @facility.register_vehicle(@cruz)
       expect(@cruz.plate_type).to eq(:regular)
@@ -57,6 +70,7 @@ RSpec.describe Facility do
     end
 
     it "updates the facility @collected_fees attribute when a vehicle is registered" do
+      @facility.add_service('Vehicle Registration')
       expect(@facility.collected_fees).to eq(0)
       @facility.register_vehicle(@cruz)
       expect(@facility.collected_fees).to eq(100)
