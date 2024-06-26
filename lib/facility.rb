@@ -37,9 +37,18 @@ class Facility
         vehicle.plate_type = :regular
         self.collected_fees += 100
       end
-      
+
     else
       "This facility is not able to register vehicles at this time."
     end
+  end
+
+  def administer_written_test(registrant)
+    if self.services.include?('Written Test')
+
+    else
+      "This facility does not current administer written tests."
+    end
+
   end
 end
