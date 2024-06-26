@@ -82,4 +82,14 @@ RSpec.describe Facility do
       expect(@facility.collected_fees).to eq(325)
     end
   end
+
+  describe '#administer_written_test' do
+    it "verifies that the facility offers written test services" do
+      expect(@facility.administer_written_test(@registrant1)).to eq("This facility does not current administer written tests.")
+
+      @facility.add_service('Written Test')
+
+      expect(@facility.administer_written_test(@registrant1)).to_not eq("This facility does not current administer written tests.")
+    end
+  end
 end

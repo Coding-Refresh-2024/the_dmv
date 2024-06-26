@@ -37,6 +37,7 @@ class Facility
         vehicle.plate_type = :regular
         self.collected_fees += 100
       end
+      
     else
       "This facility is not able to register vehicles at this time."
     end
