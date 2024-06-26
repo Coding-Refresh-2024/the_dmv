@@ -135,5 +135,17 @@ RSpec.describe Facility do
 
       expect(@facility.administer_road_test(@registrant1)).to_not eq('This registrant is not eligible to take the road test.')
     end
+
+    it "updates the registrants license_data[:license] to true if they take the test" do
+      @facility.add_service('Written Test')
+      @facility.add_service('Road Test')
+      @facility.administer_written_test(@registrant1)
+
+      expect(@registrant1.license_data[:license]).to eq(false)
+
+      @facility.administer_road_test(@registrant1)
+
+      expect(@registrant1.license_data[:license]).to eq(true)
+    end
   end
 end
