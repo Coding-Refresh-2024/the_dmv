@@ -33,5 +33,12 @@ RSpec.describe Facility do
       @facility.register_vehicle(@cruz)
       expect(@facility.registered_vehicles).to eq([@cruz])
     end
+
+    it "updates the vehicles registration date attribute" do
+      expect(@cruz.registration_date).to eq(nil)
+      @facility.register_vehicle(@cruz)
+      expect(@cruz.registration_date).to eq(Date.now)
+    end
+
   end
 end
