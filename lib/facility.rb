@@ -61,7 +61,7 @@ class Facility
     if self.services.include?('Road Test')
 
       if registrant.license_data[:written] == true
-
+        registrant.license_data[:license] = true
       else
         'This registrant is not eligible to take the road test.'
       end
