@@ -55,5 +55,17 @@ RSpec.describe Facility do
       @facility.register_vehicle(@camaro)
       expect(@camaro.plate_type).to eq(:antique)
     end
+
+    it "updates the facility @collected_fees attribute when a vehicle is registered" do
+      expect(@facility.collected_fees).to eq(0)
+      @facility.register_vehicle(@cruz)
+      expect(@facility.collected_fees).to eq(100)
+
+      @facility.register_vehicle(@bolt)
+      expect(@facility.collected_fees).to eq(300)
+
+      @facility.register_vehicle(@camaro)
+      expect(@facility.collected_fees).to eq(325)
+    end
   end
 end
