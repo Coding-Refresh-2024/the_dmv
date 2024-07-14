@@ -3,6 +3,11 @@ require 'spec_helper'
 RSpec.describe Facility do
   before(:each) do
     @facility = Facility.new({name: 'DMV Tremont Branch', address: '2855 Tremont Place Suite 118 Denver CO 80205', phone: '(720) 865-4600'})
+    @cruz = Vehicle.new({vin: '123456789abcdefgh', year: 2012, make: 'Chevrolet', model: 'Cruz', engine: :ice} )
+    @bolt = Vehicle.new({vin: '987654321abcdefgh', year: 2019, make: 'Chevrolet', model: 'Bolt', engine: :ev} )
+    @camaro = Vehicle.new({vin: '1a2b3c4d5e6f', year: 1969, make: 'Chevrolet', model: 'Camaro', engine: :ice} )
+    @registrant1 = Registrant.new('Cory', 33, true)
+    @registrant2 = Registrant.new('Abby', 15)
   end
   describe '#initialize' do
     it 'can initialize' do
@@ -11,6 +16,8 @@ RSpec.describe Facility do
       expect(@facility.address).to eq('2855 Tremont Place Suite 118 Denver CO 80205')
       expect(@facility.phone).to eq('(720) 865-4600')
       expect(@facility.services).to eq([])
+      expect(@facility.registered_vehicles).to eq([])
+      expect(@facility.collected_fees).to eq(0)
     end
   end
 
@@ -21,6 +28,161 @@ RSpec.describe Facility do
       @facility.add_service('Renew Drivers License')
       @facility.add_service('Vehicle Registration')
       expect(@facility.services).to eq(['New Drivers License', 'Renew Drivers License', 'Vehicle Registration'])
+    end
+  end
+
+  describe '#register vehicle' do
+    it "verifies that the facility can register vehicles or not" do
+      expect(@facility.registered_vehicles).to eq([])
+      expect(@facility.register_vehicle(@cruz)).to eq("This facility is not able to register vehicles at this time.")
+
+      @facility.add_service('Vehicle Registration')
+      @facility.register_vehicle(@cruz)
+
+      expect(@facility.registered_vehicles).to eq([@cruz])
+    end
+
+    it "can add a vehicle to a facilities registered vehicle attribute" do
+      @facility.add_service('Vehicle Registration')
+      expect(@facility.registered_vehicles).to eq([])
+      @facility.register_vehicle(@cruz)
+      expect(@facility.registered_vehicles).to eq([@cruz])
+    end
+
+    it "updates the vehicles registration date attribute" do
+      @facility.add_service('Vehicle Registration')
+      expect(@cruz.registration_date).to eq(nil)
+      @facility.register_vehicle(@cruz)
+      expect(@cruz.registration_date).to eq(Date.today)
+    end
+
+    it "updates the vehicles plate type to one of three types" do
+      @facility.add_service('Vehicle Registration')
+      expect(@cruz.plate_type).to eq(nil)
+      @facility.register_vehicle(@cruz)
+      expect(@cruz.plate_type).to eq(:regular)
+
+      expect(@bolt.plate_type).to eq(nil)
+      @facility.register_vehicle(@bolt)
+      expect(@bolt.plate_type).to eq(:ev)
+
+      expect(@camaro.plate_type).to eq(nil)
+      @facility.register_vehicle(@camaro)
+      expect(@camaro.plate_type).to eq(:antique)
+    end
+
+    it "updates the facility @collected_fees attribute when a vehicle is registered" do
+      @facility.add_service('Vehicle Registration')
+      expect(@facility.collected_fees).to eq(0)
+      @facility.register_vehicle(@cruz)
+      expect(@facility.collected_fees).to eq(100)
+
+      @facility.register_vehicle(@bolt)
+      expect(@facility.collected_fees).to eq(300)
+
+      @facility.register_vehicle(@camaro)
+      expect(@facility.collected_fees).to eq(325)
+    end
+  end
+
+  describe '#administer_written_test' do
+    it "verifies that the facility offers written test services" do
+      expect(@facility.administer_written_test(@registrant1)).to eq("This facility does not current administer written tests.")
+
+      @facility.add_service('Written Test')
+
+      expect(@facility.administer_written_test(@registrant1)).to_not eq("This facility does not current administer written tests.")
+    end
+
+    it "verifies that the applicant has a permit and is of age(over 15) to take the written test" do
+      @facility.add_service('Written Test')
+
+      expect(@facility.administer_written_test(@registrant1)).to_not eq('This registrant is not eligible to take the written test.')
+      expect(@facility.administer_written_test(@registrant2)).to eq('This registrant is not eligible to take the written test.')
+
+    end
+
+    it "updates the registrants license_data[:written] to true" do
+      @facility.add_service('Written Test')
+
+      expect(@registrant1.license_data[:written]).to eq(false)
+
+      @facility.administer_written_test(@registrant1)
+
+      expect(@registrant1.license_data[:written]).to eq(true)
+    end
+  end
+
+  describe '#administer_road_test'do
+    it "verifies that the facility can administer the road test" do
+      @facility.add_service('Written Test')
+      @facility.administer_written_test(@registrant1)
+
+      expect(@facility.administer_road_test(@registrant1)).to eq('This facility does not currently administer road tests.')
+
+      @facility.add_service('Road Test')
+
+      expect(@facility.administer_road_test(@registrant1)).to_not eq('This facility does not currently administer road tests.')
+    end
+
+    it "verifies that the registrant is eligible to take the road test" do
+      @facility.add_service('Written Test')
+      @facility.add_service('Road Test')
+
+      expect(@facility.administer_road_test(@registrant1)).to eq('This registrant is not eligible to take the road test.')
+
+      @facility.administer_written_test(@registrant1)
+
+      expect(@facility.administer_road_test(@registrant1)).to_not eq('This registrant is not eligible to take the road test.')
+    end
+
+    it "updates the registrants license_data[:license] to true if they take the test" do
+      @facility.add_service('Written Test')
+      @facility.add_service('Road Test')
+      @facility.administer_written_test(@registrant1)
+
+      expect(@registrant1.license_data[:license]).to eq(false)
+
+      @facility.administer_road_test(@registrant1)
+
+      expect(@registrant1.license_data[:license]).to eq(true)
+    end
+  end
+
+  describe '#renew_drivers_license' do
+    it "verifies the facility offers this service or not" do
+      expect(@facility.renew_drivers_license(@registrant1)).to eq("This facility does not currently renew licenses.")
+
+      @facility.add_service('Renew License')
+
+      expect(@facility.renew_drivers_license(@registrant1)).to_not eq("This facility does not currently renew licenses.")
+    end
+
+    it "verifies the registrant is eligible for license renewal" do
+      @facility.add_service('Renew License')
+      @facility.add_service('Written Test')
+      @facility.add_service('Road Test')
+      @facility.administer_written_test(@registrant1)
+
+      expect(@facility.renew_drivers_license(@registrant1)).to eq('This registrant is not eligible for license renewal.')
+
+      @facility.administer_road_test(@registrant1)
+
+      expect(@facility.renew_drivers_license(@registrant1)).to_not eq('This registrant is not eligible for license renewal.')
+    end
+
+    it "updates the registrants license_data[:renewed] to true" do
+      @facility.add_service('Renew License')
+      @facility.add_service('Written Test')
+      @facility.add_service('Road Test')
+      @facility.administer_written_test(@registrant1)
+      @facility.administer_road_test(@registrant1)
+
+      expect(@registrant1.license_data[:renewed]).to eq(false)
+
+      @facility.renew_drivers_license(@registrant1)
+
+      expect(@registrant1.license_data[:renewed]).to eq(true)
     end
   end
 end
