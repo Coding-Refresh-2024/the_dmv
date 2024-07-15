@@ -4,6 +4,7 @@ RSpec.describe VehicleFactory do
 
   before(:each) do
     @factory = VehicleFactory.new
+    @wa_ev_registrations = DmvDataService.new.wa_ev_registrations
   end
 
   describe '#initialize' do
@@ -12,6 +13,10 @@ RSpec.describe VehicleFactory do
     end
   end
 
-
+  describe '#create_vehicles' do
+    it 'can create vehicle' do
+      expect(@factory.create_vehicles(@wa_ev_registrations)).to be_an(Array)
+    end
+  end
 
 end
