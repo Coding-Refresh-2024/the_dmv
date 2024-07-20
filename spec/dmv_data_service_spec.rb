@@ -7,6 +7,7 @@ RSpec.describe DmvDataService do
   describe '#initialize' do
     it 'can initialize' do
       expect(@dds).to be_an_instance_of(DmvDataService)
+      binding.pry
     end
   end
 
