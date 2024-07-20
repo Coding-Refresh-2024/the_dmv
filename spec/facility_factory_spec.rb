@@ -9,7 +9,9 @@ RSpec.describe FacilityFactory do
   end
 
   describe '#initialize' do
-
+    it "can initalize" do
+      expect(@facility).to be_an_instance_of(FacilityFactory)
+    end
   end
 
 end
