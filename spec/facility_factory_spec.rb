@@ -10,7 +10,6 @@ RSpec.describe FacilityFactory do
 
   describe '#initialize' do
     it "can initalize" do
-      binding.pry
       expect(@facility).to be_an_instance_of(FacilityFactory)
     end
   end
@@ -24,9 +23,6 @@ RSpec.describe FacilityFactory do
       expect(ny_fac.count).to eq(170)
       expect(mo_fac).to be_an(Array)
       expect(mo_fac.count).to eq(178)
-
-
-
     end
   end
 
